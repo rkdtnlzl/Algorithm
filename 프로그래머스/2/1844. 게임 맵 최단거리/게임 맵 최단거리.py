@@ -1,34 +1,37 @@
 from collections import deque
 
-def bfs(maps):
+dirX = [-1, 1, 0, 0]
+dirY = [0, 0, -1, 1]
 
-    cnt = 1
+def bfs(x, y, n, m, maps):
     queue = deque()
-    max_x = len(maps)
-    max_y = len(maps[0])
-    queue.append([max_x-1, max_y-1, cnt])
-    maps[max_x-1][max_y-1] = 0
-    
-    dx = [-1, 0, 1, 0]
-    dy = [0, -1, 0, 1]
-    
+    queue.append((x, y))
     while queue:
-        x, y, cnt = queue.popleft()
-        
+        x, y = queue.popleft()
         for i in range(4):
-            nx = x + dx[i]
-            ny = y + dy[i]
-            if nx == 0 and ny == 0:
-                return cnt + 1
-            if 0 <= nx < max_x and 0 <= ny < max_y:
-                if maps[nx][ny] != 0:
-                    maps[nx][ny] = 0
-                    queue.append([nx, ny, cnt+1])
-
-    return -1
+            newX = x + dirX[i]
+            newY = y + dirY[i]
+            if newX < 0 or newX >= n or newY < 0 or newY >= m:
+                continue
+            if maps[newX][newY] == 0:
+                continue
+            if maps[newX][newY] == 1:
+                maps[newX][newY] = maps[x][y] + 1
+                queue.append((newX, newY))
+                
+    return maps[n - 1][m - 1]
 
 def solution(maps):
     answer = 0
-    answer = bfs(maps)
+    
+    n = len(maps)
+    m = len(maps[0])
+    
+    ans = bfs(0,0,n,m,maps)
+    
+    if ans != 1:
+        answer = ans
+    else:
+        answer = -1
     
     return answer
